@@ -1,0 +1,13 @@
+.wrapper {
+    position: relative;
+}
+.game {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
