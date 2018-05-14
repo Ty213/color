@@ -14,7 +14,15 @@ canvas.height = SIZE;
 
 document.addEventListener('keydown', (event) => {
     const keyName = event.key;
-    console.log(keyName);
+    if(keyName === "ArrowUp") {
+        player.setDirection("UP");
+    } else if(keyName === "ArrowDown") {
+        player.setDirection("DOWN");
+    } else if(keyName === "ArrowRight") {
+        player.setDirection("RIGHT");
+    } else if(keyName === "ArrowLeft") {
+        player.setDirection("LEFT");
+    }
   });
 
 //draws the grid on the grid-canvas
@@ -26,20 +34,40 @@ class Player {
       this.x = x;
       this.y = y;
       this.color = color;
+      this.direction = null; // UP,DOWN,LEFT,RIGHT
     }
 
     drawPlayer() {
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x,this.y,25,25);
+        ctx.fillRect(this.x,this.y,UNIT,UNIT);
+        ctx.rect(this.x,this.y,UNIT,UNIT);
+        ctx.lineWidth="2";
+        ctx.strokeStyle="red";
+        ctx.stroke();
     }
 
     setColor() {
         this.color = colorPicker.value;
     }
 
-    updatePosition() {
+    setDirection(direction) {
+        this.direction = direction; // UP,DOWN,LEFT,RIGHT
+        console.log("Set this direction:", this.direction);
+        this.updatePosition();
+    }
 
+    updatePosition() {
+        if(this.direction === "UP") {
+            this.y -= UNIT;
+        } else if(this.direction === "DOWN") {
+            this.y += UNIT;
+        } else if(this.direction === "RIGHT") {
+            this.x += UNIT;
+        } else if(this.direction === "LEFT") {
+            this.x -= UNIT;
+        }
+        this.drawPlayer();
     }
   }
 
