@@ -1,14 +1,14 @@
 //grabbing elements for document
 var canvas = document.querySelector(".game");
-var grid = document.querySelector(".grid");
+var gridCanvas = document.querySelector(".grid");
 var colorPicker = document.querySelector(".color-picker");
 
 //size of player and grid spacing
 const UNIT = 25;
 const SIZE = 400;
 //setting the size for both canvases
-grid.width = SIZE;
-grid.height = SIZE;
+gridCanvas.width = SIZE;
+gridCanvas.height = SIZE;
 canvas.width  = SIZE;
 canvas.height = SIZE;
 
@@ -25,8 +25,46 @@ document.addEventListener('keydown', (event) => {
     }
   });
 
-//draws the grid on the grid-canvas
-drawBoard();
+  //holds info for each cell of grid.
+  var cells = [];
+
+  var cell = {n: 1, position: [0,0], color: "#777"};
+  cells.push(cell);
+
+
+
+class Grid {
+    constructor(cells) {
+        this.cells = cells;
+      }
+
+    drawBoard() {
+        var ctx = gridCanvas.getContext("2d");
+        
+        for(var i = 0; i <= gridCanvas.width; i += UNIT) {
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, gridCanvas.height);
+        }
+        for(var i = 0; i <= gridCanvas.height; i += UNIT) {
+            ctx.moveTo(0, i);
+            ctx.lineTo(gridCanvas.width, i);
+    
+        }
+      
+        ctx.strokeStyle = "#777";
+        ctx.lineWidth = .5;
+        ctx.stroke();
+    }
+
+    colorBoard() {
+        console.log(this.cells);
+    }
+
+}
+
+var grid = new Grid(cells);
+grid.drawBoard();
+grid.colorBoard();
 
 
 class Player {
@@ -39,11 +77,13 @@ class Player {
 
     drawPlayer() {
         var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x,this.y,UNIT,UNIT);
+        ctx.beginPath();
         ctx.rect(this.x,this.y,UNIT,UNIT);
         ctx.lineWidth="2";
-        ctx.strokeStyle="red";
+        ctx.strokeStyle="black";
         ctx.stroke();
     }
 
@@ -59,13 +99,25 @@ class Player {
 
     updatePosition() {
         if(this.direction === "UP") {
-            this.y -= UNIT;
+            if(this.y - UNIT >= 0) {
+                this.y -= UNIT;
+            }
+            
         } else if(this.direction === "DOWN") {
-            this.y += UNIT;
+            if(this.y + UNIT < canvas.height) {
+                this.y += UNIT;
+            }
+            
         } else if(this.direction === "RIGHT") {
-            this.x += UNIT;
+            if(this.x + UNIT < canvas.width) {
+                this.x += UNIT;
+            }
+            
         } else if(this.direction === "LEFT") {
-            this.x -= UNIT;
+            if(this.x - UNIT >= 0) {
+                this.x -= UNIT;
+            }
+            
         }
         this.drawPlayer();
     }
@@ -77,24 +129,5 @@ var player = new Player();
 function getColor() {
     player.setColor();
     player.drawPlayer();
-}
-
-//draws the grid on the grid canvas
-function drawBoard() {
-    var ctx = grid.getContext("2d");
-    
-    for(var i = 0; i <= grid.width; i += UNIT) {
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, grid.height);
-    }
-    for(var i = 0; i <= grid.height; i += UNIT) {
-        ctx.moveTo(0, i);
-        ctx.lineTo(grid.width, i);
-
-    }
-  
-    ctx.strokeStyle = "#777";
-    ctx.lineWidth = .5;
-    ctx.stroke();
 }
 
